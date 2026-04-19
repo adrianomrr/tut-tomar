@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="pt-PT" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horários TUT Tomar</title>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@500,700&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
+      --color-bg: #f7f6f2;
+      --color-surface: #f9f8f5;
+      --color-surface-2: #fbfbf9;
+      --color-surface-offset: #edeae5;
+      --color-border: #d4d1ca;
+      --color-divider: #dcd9d5;
+      --color-text: #28251d;
+      --color-text-muted: #6d6b67;
+      --color-text-faint: #9a9892;
+      --color-primary: #01696f;
+      --color-primary-hover: #0c4e54;
+      --color-primary-highlight: #cedcd8;
+      --color-text-inverse: #f9f8f4;
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px rgb(40 37 29 / 0.06);
+      --shadow-md: 0 6px 18px rgb(40 37 29 / 0.08);
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --content-wide: 1200px;
+      --content-default: 960px;
+      --font-display: 'Cabinet Grotesk', 'Inter', sans-serif;
+      --font-body: 'Satoshi', 'Inter', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #171614;
+      --color-surface: #1c1b19;
+      --color-surface-2: #201f1d;
+      --color-surface-offset: #22211f;
+      --color-border: #393836;
+      --color-divider: #262523;
+      --color-text: #e2e0db;
+      --color-text-muted: #b0ada7;
+      --color-text-faint: #7f7c77;
+      --color-primary: #4f98a3;
+      --color-primary-hover: #66acb6;
+      --color-primary-highlight: #313b3b;
+      --color-text-inverse: #161513;
+      --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.18);
+      --shadow-md: 0 10px 30px rgb(0 0 0 / 0.28);
+    }
+
+    * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: none; text-size-adjust: none; }
+    body {
+      min-height: 100dvh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--color-text);
+      background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 32%),
+        var(--color-bg);
+    }
+    img, svg { display: block; max-width: 100%; }
+    button, input, select { font: inherit; color: inherit; }
+    button { cursor: pointer; border: none; background: none; }
+    a { color: inherit; }
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+
+    .skip-link {
+      position: absolute;
+      left: var(--space-4);
+      top: -100px;
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      z-index: 100;
+    }
+    .skip-link:focus { top: var(--space-4); }
+
+    .container {
+      width: min(calc(100% - 2rem), var(--content-wide));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--color-bg) 86%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4) 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      text-decoration: none;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 58%, white));
+      display: grid;
+      place-items: center;
+      color: white;
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-text span {
+      display: block;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .theme-toggle,
+    .link-button,
+    .route-chip {
+      min-height: 44px;
+      padding: 0 var(--space-4);
+      border-radius: var(--radius-full);
+      border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+      background: var(--color-surface);
+      transition: transform var(--transition-interactive), background var(--transition-interactive), border-color var(--transition-interactive);
+    }
+
+    .theme-toggle:hover,
+    .link-button:hover,
+    .route-chip:hover,
+    .route-chip.active {
+      background: var(--color-surface-offset);
+      border-color: color-mix(in srgb, var(--color-primary) 38%, var(--color-border));
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      padding: clamp(var(--space-8), 7vw, var(--space-16)) 0 var(--space-8);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 0.9fr;
+      gap: var(--space-6);
+      align-items: start;
+    }
+
+    .panel {
+      background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-copy {
+      padding: clamp(var(--space-6), 4vw, var(--space-10));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-full);
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      max-width: 12ch;
+      margin-bottom: var(--space-4);
+    }
+
+    .hero-copy p {
+      color: var(--color-text-muted);
+      max-width: 62ch;
+      margin-bottom: var(--space-6);
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+    }
+
+    .meta-card {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+    }
+
+    .meta-card span {
+      display: block;
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-faint);
+      margin-bottom: var(--space-2);
+    }
+
+    .meta-card strong {
+      font-size: var(--text-lg);
+      line-height: 1.2;
+    }
+
+    .search-panel {
+      padding: var(--space-6);
+      display: grid;
+      gap: var(--space-5);
+      position: sticky;
+      top: 5.5rem;
+    }
+
+    .search-panel h2,
+    .section-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .search-panel p,
+    .section-copy {
+      color: var(--color-text-muted);
+    }
+
+    .field {
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .field label {
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+
+    .field input,
+    .field select {
+      min-height: 48px;
+      width: 100%;
+      padding: 0 var(--space-4);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+    }
+
+    .helper {
+      font-size: var(--text-sm);
+      color: var(--color-text-faint);
+    }
+
+    main {
+      padding-bottom: var(--space-16);
+    }
+
+    section {
+      padding: var(--space-8) 0 0;
+    }
+
+    .route-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-5);
+    }
+
+    .route-chip {
+      font-weight: 700;
+    }
+
+    .results-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: var(--space-6);
+      align-items: start;
+    }
+
+    .results-card {
+      padding: var(--space-6);
+      overflow: hidden;
+    }
+
+    .results-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-bottom: var(--space-5);
+    }
+
+    .results-head h3 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      border-radius: var(--radius-full);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+
+    .summary-box {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+    }
+
+    .summary-box span {
+      display: block;
+      color: var(--color-text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: var(--text-xs);
+      margin-bottom: var(--space-2);
+    }
+
+    .summary-box strong {
+      font-size: var(--text-lg);
+      line-height: 1.2;
+    }
+
+    .times-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--space-3);
+    }
+
+    .time-card {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: color-mix(in srgb, var(--color-surface-2) 85%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+    }
+
+    .time-card small {
+      display: block;
+      color: var(--color-text-faint);
+      font-size: var(--text-xs);
+      margin-bottom: var(--space-2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .time-card strong {
+      font-size: var(--text-lg);
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-card.next {
+      background: color-mix(in srgb, var(--color-primary-highlight) 70%, var(--color-surface-2));
+      border-color: color-mix(in srgb, var(--color-primary) 36%, var(--color-border));
+    }
+
+    .sidebar-stack {
+      display: grid;
+      gap: var(--space-4);
+      position: sticky;
+      top: 5.5rem;
+    }
+
+    .mini-card {
+      padding: var(--space-5);
+    }
+
+    .mini-card h4 {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-3);
+      letter-spacing: -0.03em;
+    }
+
+    .mini-card p,
+    .mini-card li {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .mini-card ul {
+      display: grid;
+      gap: var(--space-2);
+      padding-left: 1rem;
+    }
+
+    .all-stops {
+      display: grid;
+      gap: var(--space-3);
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: var(--space-5);
+    }
+
+    .stop-item {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      border: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+    }
+
+    .stop-item strong {
+      display: block;
+      margin-bottom: var(--space-2);
+    }
+
+    .stop-item span {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .empty-state {
+      padding: var(--space-8);
+      border-radius: var(--radius-xl);
+      background: var(--color-surface);
+      border: 1px dashed color-mix(in srgb, var(--color-text) 18%, transparent);
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+
+    footer {
+      padding: var(--space-10) 0 var(--space-8);
+      color: var(--color-text-faint);
+      font-size: var(--text-sm);
+    }
+
+    .footer-panel {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding-top: var(--space-6);
+      border-top: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .results-layout {
+        grid-template-columns: 1fr;
+      }
+      .search-panel,
+      .sidebar-stack {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar,
+      .footer-panel,
+      .results-head {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .hero-meta,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        width: min(calc(100% - 1rem), var(--content-wide));
+      }
+      .hero-copy,
+      .search-panel,
+      .results-card,
+      .mini-card {
+        padding: var(--space-5);
+      }
+      h1 {
+        max-width: 9ch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#conteudo" class="skip-link">Saltar para o conteúdo</a>
+
+  <header>
+    <div class="container topbar">
+      <a class="brand" href="#topo" aria-label="Horários TUT Tomar">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 16V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8"/>
+            <path d="M7 16h10"/>
+            <circle cx="8" cy="18" r="1.5" fill="currentColor" stroke="none"/>
+            <circle cx="16" cy="18" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <strong>TUT Tomar</strong>
+          <span>Consulta rápida de horários</span>
+        </div>
+      </a>
+      <div class="header-actions">
+        <a class="link-button" href="https://www.rodotejo.pt/wp-content/uploads/pdf-tut-tomar.pdf" target="_blank" rel="noopener noreferrer">Abrir PDF oficial</a>
+        <button class="theme-toggle" data-theme-toggle aria-label="Mudar tema">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" id="topo">
+      <div class="container hero-grid">
+        <div class="panel hero-copy">
+          <div class="eyebrow">TUT · Transportes Urbanos de Tomar</div>
+          <h1>Escolhe uma carreira, uma paragem e vê os próximos horários.</h1>
+          <p>Este site junta os horários do PDF oficial da Rodoviária do Tejo num formato mais simples de consultar no telemóvel ou no computador. Podes filtrar por carreira, procurar por paragem e ver as próximas passagens num instante.</p>
+          <div class="hero-meta">
+            <div class="meta-card">
+              <span>Atualização</span>
+              <strong>08 jan 2025</strong>
+            </div>
+            <div class="meta-card">
+              <span>Operador</span>
+              <strong>Rodotejo</strong>
+            </div>
+            <div class="meta-card">
+              <span>Consulta</span>
+              <strong>Rápida</strong>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel search-panel" aria-label="Filtros de pesquisa">
+          <div>
+            <h2>Encontrar horário</h2>
+            <p>Seleciona a carreira e escreve o nome da paragem para veres as próximas horas.</p>
+          </div>
+
+          <div class="field">
+            <label for="routeSelect">Carreira</label>
+            <select id="routeSelect"></select>
+          </div>
+
+          <div class="field">
+            <label for="stopSearch">Paragem</label>
+            <input id="stopSearch" type="search" placeholder="Ex.: Hospital, Mercado, Alameda" autocomplete="off" />
+            <div class="helper">A pesquisa aceita parte do nome da paragem.</div>
+          </div>
+
+          <div class="field">
+            <label for="timeMode">Mostrar</label>
+            <select id="timeMode">
+              <option value="next">Próximos horários</option>
+              <option value="all">Todos os horários da paragem</option>
+            </select>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2 class="section-title">Carreiras disponíveis</h2>
+        <p class="section-copy">Cada botão representa um conjunto de horários extraídos do PDF. Ao mudar de carreira, o site atualiza automaticamente as paragens e os próximos horários.</p>
+        <div class="route-list" id="routeChips"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container results-layout">
+        <div class="panel results-card">
+          <div class="results-head">
+            <div>
+              <h3 id="resultTitle">Escolhe uma paragem</h3>
+              <p class="section-copy" id="resultSubtitle">Usa os filtros acima para consultar os horários.</p>
+            </div>
+            <div class="pill" id="routeBadge">Sem seleção</div>
+          </div>
+
+          <div class="summary-grid" id="summaryGrid"></div>
+          <div class="times-grid" id="timesGrid"></div>
+          <div class="empty-state" id="emptyState">Seleciona uma carreira e procura uma paragem para começar.</div>
+        </div>
+
+        <aside class="sidebar-stack">
+          <div class="panel mini-card">
+            <h4>Sugestões rápidas</h4>
+            <ul>
+              <li>Clica numa carreira e depois escreve “Hospital”, “Mercado” ou “Terminal”.</li>
+              <li>Se não souberes o nome exato, basta escrever parte da paragem.</li>
+              <li>Em “Todos os horários”, vês a lista completa para a paragem escolhida.</li>
+            </ul>
+          </div>
+
+          <div class="panel mini-card">
+            <h4>Notas</h4>
+            <p>Os dados foram organizados a partir do PDF oficial. Se houver atualização futura pela operadora, convém confirmar no documento original.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2 class="section-title">Paragens da carreira</h2>
+        <p class="section-copy">Lista completa das paragens da carreira selecionada, para ser mais fácil descobrir o nome certo antes de pesquisar.</p>
+        <div class="all-stops" id="allStops"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-panel">
+      <span>Site local para consulta rápida dos horários do TUT.</span>
+      <span>Fonte: PDF oficial disponibilizado pela Rodotejo.</span>
+    </div>
+  </footer>
+
+  <script>
+    const schedules = {
+      "Linha Central": {
+        description: "Circuito urbano frequente entre T. Rodoviário / CP, centro, Hospital e Zona Comercial.",
+        stops: {
+          "T. Rodoviário / CP": ["7:10","7:30","7:50","8:10","8:30","8:50","9:10","9:30","9:50","10:10","10:30","10:50","11:10","11:30","11:50","12:10","12:30","12:50","13:10","13:30","13:50","14:10","14:30","14:50","15:10","15:30","15:50","16:10","16:30","16:50","17:10","17:30","17:50","18:10","18:30","18:50","19:10","19:30","20:00"],
+          "R. Rodrigues Simões": ["7:11","7:31","7:51","8:11","8:31","8:51","9:11","9:31","9:51","10:11","10:31","10:51","11:11","11:31","11:51","12:11","12:31","12:51","13:11","13:31","13:51","14:11","14:31","14:51","15:11","15:31","15:51","16:11","16:31","16:51","17:11","17:31","17:51","18:11","18:31","18:51","19:11","19:31","20:01"],
+          "Av. D. Nuno Álvares Pereira": ["7:12","7:32","7:52","8:12","8:32","8:52","9:12","9:32","9:52","10:12","10:32","10:52","11:12","11:32","11:52","12:12","12:32","12:52","13:12","13:32","13:52","14:12","14:32","14:52","15:12","15:32","15:52","16:12","16:32","16:52","17:12","17:32","17:52","18:12","18:32","18:52","19:12","19:32","20:02"],
+          "R. Torres Pinheiro": ["7:13","7:33","7:53","8:13","8:33","8:53","9:13","9:33","9:53","10:13","10:33","10:53","11:13","11:33","11:53","12:13","12:33","12:53","13:13","13:33","13:53","14:13","14:33","14:53","15:13","15:33","15:53","16:13","16:33","16:53","17:13","17:33","17:53","18:13","18:33","18:53","19:13","19:33","20:03"],
+          "Mercado": ["7:14","7:34","7:54","8:14","8:34","8:54","9:14","9:34","9:54","10:14","10:34","10:54","11:14","11:34","11:54","12:14","12:34","12:54","13:14","13:34","13:54","14:14","14:34","14:54","15:14","15:34","15:54","16:14","16:34","16:54","17:14","17:34","17:54","18:14","18:34","18:54","19:14","19:34","20:04"],
+          "C. Emprego": ["7:15","7:35","7:55","8:15","8:35","8:55","9:15","9:35","9:55","10:15","10:35","10:55","11:15","11:35","11:55","12:15","12:35","12:55","13:15","13:35","13:55","14:15","14:35","14:55","15:15","15:35","15:55","16:15","16:35","16:55","17:15","17:35","17:55","18:15","18:35","18:55","19:15","19:35","20:05"],
+          "R. Prof. Andrade": ["7:16","7:36","7:56","8:16","8:36","8:56","9:16","9:36","9:56","10:16","10:36","10:56","11:16","11:36","11:56","12:16","12:36","12:56","13:16","13:36","13:56","14:16","14:36","14:56","15:16","15:36","15:56","16:16","16:36","16:56","17:16","17:36","17:56","18:16","18:36","18:56","19:16","19:36","20:06"],
+          "C. Form. Profissional": ["7:18","7:38","7:58","8:18","8:38","8:58","9:18","9:38","9:58","10:18","10:38","10:58","11:18","11:38","11:58","12:18","12:38","12:58","13:18","13:38","13:58","14:18","14:38","14:58","15:18","15:38","15:58","16:18","16:38","16:58","17:18","17:38","17:58","18:18","18:38","18:58","19:18","19:38","20:08"],
+          "Bairro da Caixa": ["7:20","7:40","8:00","8:20","8:40","9:00","9:20","9:40","10:00","10:20","10:40","11:00","11:20","11:40","12:00","12:20","12:40","13:00","13:20","13:40","14:00","14:20","14:40","15:00","15:20","15:40","16:00","16:20","16:40","17:00","17:20","17:40","18:00","18:20","18:40","19:00","19:20","19:40","20:10"],
+          "Esc. Sec. Jacome Ratton": ["7:21","7:41","8:01","8:21","8:41","9:01","9:21","9:41","10:01","10:21","10:41","11:01","11:21","11:41","12:01","12:21","12:41","13:01","13:21","13:41","14:01","14:21","14:41","15:01","15:21","15:41","16:01","16:21","16:41","17:01","17:21","17:41","18:01","18:21","18:41","19:01","19:21","19:41","20:11"],
+          "Biblioteca Municipal": ["7:22","7:42","8:02","8:22","8:42","9:02","9:22","9:42","10:02","10:22","10:42","11:02","11:22","11:42","12:02","12:22","12:42","13:02","13:22","13:42","14:02","14:22","14:42","15:02","15:22","15:42","16:02","16:22","16:42","17:02","17:22","17:42","18:02","18:22","18:42","19:02","19:22","19:42","20:12"],
+          "C. de Saúde da Nabância": ["7:24","7:44","8:04","8:24","8:44","9:04","9:24","9:44","10:04","10:24","10:44","11:04","11:24","11:44","12:04","12:24","12:44","13:04","13:24","13:44","14:04","14:24","14:44","15:04","15:24","15:44","16:04","16:24","16:44","17:04","17:24","17:44","18:04","18:24","18:44","19:04","19:24","19:44","20:14"],
+          "Estrada da Serra": ["7:25","7:45","8:05","8:25","8:45","9:05","9:25","9:45","10:05","10:25","10:45","11:05","11:25","11:45","12:05","12:25","12:45","13:05","13:25","13:45","14:05","14:25","14:45","15:05","15:25","15:45","16:05","16:25","16:45","17:05","17:25","17:45","18:05","18:25","18:45","19:05","19:25","19:45","20:15"],
+          "Inst. Politécnico": ["7:27","7:47","8:07","8:27","8:47","9:07","9:27","9:47","10:07","10:27","10:47","11:07","11:27","11:47","12:07","12:27","12:47","13:07","13:27","13:47","14:07","14:27","14:47","15:07","15:27","15:47","16:07","16:27","16:47","17:07","17:27","17:47","18:07","18:27","18:47","19:07","19:27","19:47","20:17"],
+          "Av. Maria Lourdes Mello e Castro": ["7:28","7:48","8:08","8:28","8:48","9:08","9:28","9:48","10:08","10:28","10:48","11:08","11:28","11:48","12:08","12:28","12:48","13:08","13:28","13:48","14:08","14:28","14:48","15:08","15:28","15:48","16:08","16:28","16:48","17:08","17:28","17:48","18:08","18:28","18:48","19:08","19:28","19:48"],
+          "Hospital": ["7:30","7:50","8:10","8:30","8:50","9:10","9:30","9:50","10:10","10:30","10:50","11:10","11:30","11:50","12:10","12:30","12:50","13:10","13:30","13:50","14:10","14:30","14:50","15:10","15:30","15:50","16:10","16:30","16:50","17:10","17:30","17:50","18:10","18:30","18:50","19:10","19:30","19:50"],
+          "Zona Comercial": ["7:32","7:52","8:12","8:32","8:52","9:12","9:32","9:52","10:12","10:32","10:52","11:12","11:32","11:52","12:12","12:32","12:52","13:12","13:32","13:52","14:12","14:32","14:52","15:12","15:32","15:52","16:12","16:32","16:52","17:12","17:32","17:52","18:12","18:32","18:52","19:12","19:32","19:52"],
+          "Choromela": ["7:35","7:55","8:15","8:35","8:55","9:15","9:35","9:55","10:15","10:35","10:55","11:15","11:35","11:55","12:15","12:35","12:55","13:15","13:35","13:55","14:15","14:35","14:55","15:15","15:35","15:55","16:15","16:35","16:55","17:15","17:35","17:55","18:15","18:35","18:55","19:15","19:35","19:55"],
+          "Praça de Touros": ["7:36","7:56","8:16","8:36","8:56","9:16","9:36","9:56","10:16","10:36","10:56","11:16","11:36","11:56","12:16","12:36","12:56","13:16","13:36","13:56","14:16","14:36","14:56","15:16","15:36","15:56","16:16","16:36","16:56","17:16","17:36","17:56","18:16","18:36","18:56","19:16","19:36","19:56"],
+          "Rotunda St.º André": ["7:37","7:57","8:17","8:37","8:57","9:17","9:37","9:57","10:17","10:37","10:57","11:17","11:37","11:57","12:17","12:37","12:57","13:17","13:37","13:57","14:17","14:37","14:57","15:17","15:37","15:57","16:17","16:37","16:57","17:17","17:37","17:57","18:17","18:37","18:57","19:17","19:37","19:57"],
+          "Av. Âng. Tamagnini": ["7:38","7:58","8:18","8:38","8:58","9:18","9:38","9:58","10:18","10:38","10:58","11:18","11:38","11:58","12:18","12:38","12:58","13:18","13:38","13:58","14:18","14:38","14:58","15:18","15:38","15:58","16:18","16:38","16:58","17:18","17:38","17:58","18:18","18:38","18:58","19:18","19:38","19:58"],
+          "Alameda": ["7:39","7:59","8:19","8:39","8:59","9:19","9:39","9:59","10:19","10:39","10:59","11:19","11:39","11:59","12:19","12:39","12:59","13:19","13:39","13:59","14:19","14:39","14:59","15:19","15:39","15:59","16:19","16:39","16:59","17:19","17:39","17:59","18:19","18:39","18:59","19:19","19:39","19:59"],
+          "Estádio": ["7:40","8:00","8:20","8:40","9:00","9:20","9:40","10:00","10:20","10:40","11:00","11:20","11:40","12:00","12:20","12:40","13:00","13:20","13:40","14:00","14:20","14:40","15:00","15:20","15:40","16:00","16:20","16:40","17:00","17:20","17:40","18:00","18:20","18:40","19:00","19:20","19:40","20:00"],
+          "Mouchão": ["7:41","8:01","8:21","8:41","9:01","9:21","9:41","10:01","10:21","10:41","11:01","11:21","11:41","12:01","12:21","12:41","13:01","13:21","13:41","14:01","14:21","14:41","15:01","15:21","15:41","16:01","16:21","16:41","17:01","17:21","17:41","18:01","18:21","18:41","19:01","19:21","19:41","20:01"],
+          "Lg. Pelourinho": ["7:42","8:02","8:22","8:42","9:02","9:22","9:42","10:02","10:22","10:42","11:02","11:22","11:42","12:02","12:22","12:42","13:02","13:22","13:42","14:02","14:22","14:42","15:02","15:22","15:42","16:02","16:22","16:42","17:02","17:22","17:42","18:02","18:22","18:42","19:02","19:22","19:42","20:02"],
+          "Praça da República": ["7:43","8:03","8:23","8:43","9:03","9:23","9:43","10:03","10:23","10:43","11:03","11:23","11:43","12:03","12:23","12:43","13:03","13:23","13:43","14:03","14:23","14:43","15:03","15:23","15:43","16:03","16:23","16:43","17:03","17:23","17:43","18:03","18:23","18:43","19:03","19:23","19:43","20:03"],
+          "Misericórdia": ["7:45","8:05","8:25","8:45","9:05","9:25","9:45","10:05","10:25","10:45","11:05","11:25","11:45","12:05","12:25","12:45","13:05","13:25","13:45","14:05","14:25","14:45","15:05","15:25","15:45","16:05","16:25","16:45","17:05","17:25","17:45","18:05","18:25","18:45","19:05","19:25","19:45","20:05"]
+        }
+      },
+      "Linha Santa Cruz": {
+        description: "Percurso urbano com passagem por Serôdia, Santa Cruz, Hospital e regresso ao centro.",
+        stops: {
+          "T. Rodoviário / CP": ["8:10","8:50","9:30","10:10","10:50","11:30","12:10","12:50","13:30","15:10","16:10","17:10","18:10","19:10","20:00"],
+          "R. Rodrigues Simões": ["8:11","8:51","9:31","10:11","10:51","11:31","12:11","12:51","13:31","15:11","16:11","17:11","18:11","19:11","20:01"],
+          "Av. D. Nuno Álvares Pereira": ["8:12","8:52","9:32","10:12","10:52","11:32","12:12","12:52","13:32","15:12","16:12","17:12","18:12","19:12","20:02"],
+          "R. Torres Pinheiro": ["8:13","8:53","9:33","10:13","10:53","11:33","12:13","12:53","13:33","15:13","16:13","17:13","18:13","19:13","20:03"],
+          "Mercado": ["8:14","8:54","9:34","10:14","10:54","11:34","12:14","12:54","13:34","15:14","16:14","17:14","18:14","19:14","20:04"],
+          "C. Emprego": ["8:15","8:55","9:35","10:15","10:55","11:35","12:15","12:55","13:35","15:15","16:15","17:15","18:15","19:15","20:05"],
+          "R. Prof. Andrade": ["8:16","8:56","9:36","10:16","10:56","11:36","12:16","12:56","13:36","15:16","16:16","17:16","18:16","19:16","20:06"],
+          "C. Form. Profissional": ["8:17","8:57","10:17","11:37","12:57","13:37"],
+          "Rua Aquiles M. Lima (Travessa do Rio)": ["9:38","10:58","12:18"],
+          "Marmelais de Baixo": ["9:39","10:59","12:19"],
+          "Cemitério Marmelais": ["9:40","11:00","12:20"],
+          "Marmelais de Cima": ["9:40","11:00","12:20"],
+          "Bairro da Caixa": ["8:19","8:59","9:43","10:19","11:03","11:39","12:23","12:59","13:39","15:20","16:20","17:20","18:20","19:20","20:10"],
+          "Esc. Sec. Jacome Ratton": ["8:20","9:00","9:44","10:20","11:04","11:40","12:24","13:00","13:40","15:21","16:21","17:21","18:21","19:21","20:11"],
+          "Biblioteca Municipal": ["8:21","9:01","9:45","10:21","11:05","11:41","12:25","13:01","13:41","15:22","16:22","17:22","18:22","19:22","20:12"],
+          "C. de Saúde da Nabância": ["8:23","9:03","9:47","10:23","11:07","11:43","12:27","13:03","13:43","15:24","16:24","17:24","18:24","19:24","20:14"],
+          "Estrada da Serra": ["8:24","9:04","9:48","10:24","11:08","11:44","12:28","13:04","13:44","15:25","16:25","17:25","18:25","19:25","20:15"],
+          "Inst. Politécnico": ["8:26","9:06","9:50","10:26","11:10","11:46","12:30","13:06","13:46","15:27","16:27","17:27","18:27","19:27","20:17"],
+          "Serôdia": ["8:27","9:07","10:27","11:47","13:07","13:47","15:28","16:28","17:28","18:28","19:28","20:18"],
+          "Avessadas": ["8:28","9:08","10:28","11:48","13:08","13:48","15:29","16:29","17:29","18:29","19:31","20:21"],
+          "Quinta de Santa Cruz": ["8:29","9:09","10:29","11:49","13:09","13:49","15:30","16:30","17:30","18:30","19:32","20:22"],
+          "Santa Cruz": ["8:30","9:10","10:30","11:50","13:10","13:50","15:31","16:31","17:31","18:31","19:33","20:23"],
+          "Estrada de Carvalheiros": ["8:31","9:11","10:31","11:51","13:11","13:51","15:32","16:32","17:32","18:32","19:34","20:24"],
+          "Alvito 3": ["8:32","9:12","10:32","11:52","13:12","13:52","15:33","16:33","17:33","18:33","19:35","20:25"],
+          "Gorduchas": ["8:33","9:13","10:33","11:53","13:13","13:53","15:34","16:34","17:34","18:34","19:36","20:26"],
+          "Av. Maria de Lourdes Mello e Castro": ["9:51","11:11","12:31"],
+          "Hospital": ["8:35","9:15","9:53","10:35","11:13","11:55","12:33","13:15","13:55","15:36","16:36","17:36","18:36","19:38","20:28"],
+          "Zona Comercial": ["8:37","9:17","9:55","10:37","11:15","11:57","12:35","13:17","13:57","15:38","16:38","17:38","18:38","19:40","20:30"],
+          "Choromela": ["8:38","9:18","9:56","10:38","11:16","11:58","12:36","13:18","13:58","15:39","16:39","17:39","18:39","19:41","20:31"],
+          "Praça de Touros": ["8:39","9:19","9:57","10:39","11:17","11:59","12:37","13:19","13:59","15:40","16:40","17:40","18:40","19:42","20:32"],
+          "Rotunda St.º André": ["8:40","9:20","9:58","10:40","11:18","12:00","12:38","13:20","14:00","15:41","16:41","17:41","18:41","19:43","20:33"],
+          "Av. Âng. Tamagnini": ["8:41","9:21","9:59","10:41","11:19","12:01","12:39","13:21","14:01","15:42","16:42","17:42","18:42","19:44","20:34"],
+          "Alameda": ["8:42","9:22","10:00","10:42","11:20","12:02","12:40","13:22","14:02","15:43","16:43","17:43","18:43","19:45","20:35"],
+          "Estádio": ["8:43","9:23","10:01","10:43","11:21","12:03","12:41","13:23","14:03","15:44","16:44","17:44","18:44","19:46","20:36"],
+          "Mouchão": ["8:44","9:24","10:02","10:44","11:22","12:04","12:42","13:24","14:04","15:45","16:45","17:45","18:45","19:47","20:37"],
+          "Lg. Pelourinho": ["8:45","9:25","10:03","10:45","11:23","12:05","12:43","13:25","14:05","15:46","16:46","17:46","18:46","19:48","20:38"],
+          "Praça da República": ["8:46","9:26","10:04","10:46","11:24","12:06","12:44","13:26","14:06","15:47","16:47","17:47","18:47","19:49","20:39"],
+          "Misericórdia": ["8:47","9:27","10:05","10:47","11:25","12:07","12:45","13:27","14:07","15:49","16:49","17:49","18:49","19:51","20:41"]
+        }
+      },
+      "Linha Zona Norte": {
+        description: "Ligação entre Terminal Rodoviário, bairros norte, escolas e zona hospitalar/comercial.",
+        stops: {
+          "T. Rodoviário / CP": ["7:00","7:45","8:50","9:50","10:40","11:40","12:45","13:40","14:45","15:40","16:45","17:55","19:00"],
+          "EB 1 Templários": ["7:01","7:46","8:51","9:51","10:41","11:41","12:46","13:41","14:46","15:41","16:46","17:56","19:01"],
+          "Escola Profissional": ["7:02","7:47","8:52","9:52","10:42","11:42","12:47","13:42","14:47","15:42","16:47","17:57","19:02"],
+          "Terreiro Dom Gualdim Pais": ["9:54","10:44","11:44","12:49","13:44","14:49","15:44","16:49","17:59","19:04"],
+          "Mata dos 7 Montes": ["9:56","10:46","11:46","12:51","13:46","14:51","15:46","16:51","18:01","19:06"],
+          "Bairro N. S.ª Anjos": ["7:04","7:49","8:53","9:58","10:48","11:48","12:53","13:48","14:53","15:48","16:53","18:03","19:08"],
+          "Telégrafo": ["7:05","7:50","8:54","9:59","10:49","11:49","12:54","13:49","14:54","15:49","16:54","18:04","19:09"],
+          "Algarvias": ["7:06","7:52","8:56","10:00","10:50","11:50","12:55","13:50","14:55","15:50","16:55","18:05","19:10"],
+          "Murteira": ["7:07","7:53","8:57","10:01","10:51","11:51","12:56","13:51","14:56","15:51","16:56","18:06","19:11"],
+          "Casal Peixinho": ["7:08","7:54","8:58","10:02","10:52","11:52","12:57","13:52","14:57","15:52","16:57","18:07","19:12"],
+          "Cadeira D'El Rei": ["7:09","7:55","8:59","10:03","10:53","11:53","12:58","13:53","14:58","15:53","16:58","18:08","19:13"],
+          "Venda da Gaita 1": ["7:10","7:56","9:00","10:04","10:54","11:54","12:59","13:54","14:59","15:54","16:59","18:09","19:14"],
+          "Área Comercial": ["7:11","7:57","9:01","11:55","13:55","15:55","17:00","18:10","19:15"],
+          "Gândara": ["7:59","9:03","11:57","13:57","15:57","17:02","18:12","19:17"],
+          "Casal das Sortes 1": ["8:00","9:04","11:59","13:59","15:59","17:04","18:14","19:19"],
+          "Carregueiros (C. das Caneiras cruz.)": ["8:01","9:05","12:00","14:00","16:00","17:05","18:15","19:20"],
+          "Carregueiros Rua S. Simão (C. Saúde)": ["8:03","9:07","12:02","14:02","16:02","17:06","18:16","19:21"],
+          "Casal das Sortes 2": ["8:07","9:11","12:05","14:05","16:05","17:08","18:18","19:23"],
+          "Venda da Gaita 2": ["8:09","9:13","12:07","14:07","16:07","17:10","18:20","19:25"],
+          "Bairro do Colégio": ["7:12","8:10","9:14","10:05","10:55","12:08","13:00","14:08","15:00","16:08","17:11","18:21","19:26"],
+          "Casal das Atalaias": ["7:14","8:12","9:16","10:07","10:57","12:09","13:02","14:10","15:02","16:10","17:13","18:23","19:28"],
+          "Rua de Leiria": ["7:15","8:13","9:17","10:08","10:58","12:11","13:03","14:11","15:03","16:11","17:14","18:24","19:29"],
+          "Pelourinho": ["7:16","8:14","9:18","10:09","10:59","12:12","13:04","14:12","15:04","16:12","17:15","18:25","19:30"],
+          "Levada": ["7:17","8:15","9:19","10:10","11:00","12:13","13:05","14:13","15:05","16:13","17:16","18:26","19:31"],
+          "Mercado": ["7:18","8:16","9:20","10:11","11:01","12:14","13:06","14:14","15:06","16:14","17:17","18:27","19:32"],
+          "Av. Norton Matos": ["7:19","8:17","9:21","10:12","11:02","12:15","13:07","14:15","15:07","16:15","17:18","18:28","19:33"],
+          "Biblioteca": ["7:20","8:18","9:22","10:13","11:03","12:16","13:08","14:16","15:08","16:16","17:19","18:29","19:34"],
+          "Pavilhão Jacome Ratton": ["7:21","8:19","9:23","10:14","11:04","12:17","13:09","14:17","15:09","16:17","17:20","18:30","19:35"],
+          "Bairro da Caixa": ["7:22","8:20","9:24","10:15","11:05","12:18","13:10","14:18","15:10","16:18","17:21","18:31","19:36"],
+          "C. Saúde da Nabância": ["7:23","8:21","9:25","10:16","11:06","12:19","13:11","14:19","15:11","16:19","17:22","18:32","19:37"],
+          "Estrada da Serra": ["8:22","9:26","10:17","11:07","12:20","13:12","14:20","15:12","16:20","17:23","18:33","19:38"],
+          "R. Coronel Garcês Teixeira": ["7:24","8:23","9:27","10:18","11:08","12:21","13:13","14:21","15:13","16:21","17:24","18:34","19:39"],
+          "EB 2,3 D. Nuno Álvares Pereira": ["7:25","8:24","9:28","10:19","11:09","12:22","13:14","14:22","15:14","16:22","17:25","18:35","19:40"],
+          "EB 2,3 Gualdim Pais": ["7:26","8:25","9:29","10:20","11:10","12:23","13:15","14:23","15:15","16:23","17:26","18:36","19:41"],
+          "Complexo Desportivo": ["7:27","8:26","9:30","10:21","11:11","12:24","13:16","14:24","15:16","16:24","17:27","18:37","19:42"],
+          "Hospital": ["7:28","8:27","9:31","10:22","11:12","12:25","13:17","14:25","15:17","16:25","17:28","18:38","19:43"],
+          "Zona Comercial": ["7:30","8:29","9:33","10:24","11:14","12:27","13:19","14:27","15:19","16:27","17:30","18:40","19:45"],
+          "R. Infante D. Fernando": ["7:31","8:30","9:34","10:25","11:15","12:28","13:20","14:28","15:20","16:28","17:31","18:41","19:46"],
+          "Rua Cidade de Hadera": ["7:33","8:32","12:30","13:22","14:30","16:30","17:33","19:48"],
+          "Casal dos Frades": ["7:35","8:34","12:32","13:24","14:32","16:32","17:35","19:50"],
+          "R. António Duarte Faustino": ["7:36","8:35","9:36","10:27","11:17","12:33","13:25","14:33","15:22","16:33","17:36","18:43","19:51"],
+          "R. Egaz Moniz": ["7:37","8:36","9:38","10:28","11:18","12:34","13:26","14:34","15:23","16:34","17:37","18:44","19:52"],
+          "Bairro 1º de Maio": ["7:38","8:37","9:39","10:29","11:19","12:35","13:27","14:35","15:24","16:35","17:38","18:45","19:53"],
+          "Av. Ângela Tamagnini": ["7:39","8:38","9:40","10:30","11:20","12:36","13:28","14:36","15:25","16:36","17:39","18:46","19:54"],
+          "Alameda 1 de Março": ["7:40","8:39","9:41","10:31","11:21","12:37","13:29","14:37","15:26","16:37","17:40","18:47","19:55"],
+          "R. Torres Pinheiro": ["7:42","8:41","9:43","10:33","11:23","12:39","13:31","14:39","15:28","16:39","17:42","18:49","19:57"],
+          "Terminal Rodoviário": ["7:43","8:42","9:44","10:34","11:24","12:40","13:32","14:40","15:29","16:40","17:43","18:50","19:58"]
+        }
+      }
+    };
+
+    const routeSelect = document.getElementById('routeSelect');
+    const stopSearch = document.getElementById('stopSearch');
+    const timeMode = document.getElementById('timeMode');
+    const routeChips = document.getElementById('routeChips');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultSubtitle = document.getElementById('resultSubtitle');
+    const routeBadge = document.getElementById('routeBadge');
+    const summaryGrid = document.getElementById('summaryGrid');
+    const timesGrid = document.getElementById('timesGrid');
+    const emptyState = document.getElementById('emptyState');
+    const allStops = document.getElementById('allStops');
+
+    const routeNames = Object.keys(schedules);
+    let selectedRoute = routeNames[0];
+
+    function parseTimeToMinutes(time) {
+      const [h, m] = time.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function getCurrentMinutes() {
+      const now = new Date();
+      return now.getHours() * 60 + now.getMinutes();
+    }
+
+    function formatNow() {
+      const now = new Date();
+      return now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function fillRoutes() {
+      routeSelect.innerHTML = routeNames.map(route => `<option value="${route}">${route}</option>`).join('');
+      routeSelect.value = selectedRoute;
+      routeChips.innerHTML = routeNames.map(route => `
+        <button class="route-chip ${route === selectedRoute ? 'active' : ''}" data-route="${route}">${route}</button>
+      `).join('');
+      routeChips.querySelectorAll('[data-route]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedRoute = btn.dataset.route;
+          routeSelect.value = selectedRoute;
+          fillRoutes();
+          renderStops();
+          renderResults();
+        });
+      });
+    }
+
+    function getFilteredStops() {
+      const entries = Object.entries(schedules[selectedRoute].stops);
+      const query = stopSearch.value.trim().toLowerCase();
+      if (!query) return entries;
+      return entries.filter(([stop]) => stop.toLowerCase().includes(query));
+    }
+
+    function renderStops() {
+      const stops = Object.keys(schedules[selectedRoute].stops);
+      allStops.innerHTML = stops.map((stop, index) => `
+        <article class="stop-item">
+          <strong>${stop}</strong>
+          <span>Paragem ${index + 1} da ${selectedRoute}</span>
+        </article>
+      `).join('');
+    }
+
+    function renderResults() {
+      const matches = getFilteredStops();
+      const route = schedules[selectedRoute];
+      routeBadge.textContent = selectedRoute;
+
+      if (matches.length === 0) {
+        resultTitle.textContent = 'Nenhuma paragem encontrada';
+        resultSubtitle.textContent = 'Tenta escrever menos letras ou confirmar o nome da paragem.';
+        summaryGrid.innerHTML = '';
+        timesGrid.innerHTML = '';
+        emptyState.style.display = 'block';
+        emptyState.textContent = 'Não encontrámos nenhuma paragem com esse nome nesta carreira.';
+        return;
+      }
+
+      const [stopName, stopTimes] = matches[0];
+      const nowMinutes = getCurrentMinutes();
+      const futureTimes = stopTimes.filter(time => parseTimeToMinutes(time) >= nowMinutes);
+      const shownTimes = timeMode.value === 'all' ? stopTimes : futureTimes.slice(0, 8);
+
+      resultTitle.textContent = stopName;
+      resultSubtitle.textContent = route.description;
+      emptyState.style.display = shownTimes.length ? 'none' : 'block';
+      emptyState.textContent = timeMode.value === 'all'
+        ? 'Sem horários disponíveis para mostrar.'
+        : 'Já não há mais horários hoje para esta paragem. Vê a lista completa para consultar todos os horários.';
+
+      const firstUpcoming = futureTimes[0] || '—';
+      const totalTrips = stopTimes.length;
+      const modeText = timeMode.value === 'all' ? 'Todos os horários' : 'Próximos horários';
+
+      summaryGrid.innerHTML = `
+        <div class="summary-box">
+          <span>Agora</span>
+          <strong>${formatNow()}</strong>
+        </div>
+        <div class="summary-box">
+          <span>Próximo</span>
+          <strong>${firstUpcoming}</strong>
+        </div>
+        <div class="summary-box">
+          <span>Total</span>
+          <strong>${totalTrips} passagens</strong>
+        </div>
+      `;
+
+      timesGrid.innerHTML = shownTimes.map((time, index) => `
+        <article class="time-card ${time === firstUpcoming && timeMode.value !== 'all' ? 'next' : ''}">
+          <small>${index === 0 && time === firstUpcoming && timeMode.value !== 'all' ? 'A seguir' : modeText}</small>
+          <strong>${time}</strong>
+        </article>
+      `).join('');
+
+      if (!shownTimes.length) {
+        timesGrid.innerHTML = '';
+      }
+    }
+
+    routeSelect.addEventListener('change', (e) => {
+      selectedRoute = e.target.value;
+      fillRoutes();
+      renderStops();
+      renderResults();
+    });
+
+    stopSearch.addEventListener('input', renderResults);
+    timeMode.addEventListener('change', renderResults);
+
+    (function(){
+      const toggle = document.querySelector('[data-theme-toggle]');
+      const root = document.documentElement;
+      let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+      const updateIcon = () => {
+        toggle.innerHTML = theme === 'dark'
+          ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+          : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      };
+      updateIcon();
+      toggle.addEventListener('click', () => {
+        theme = theme === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', theme);
+        updateIcon();
+      });
+    })();
+
+    fillRoutes();
+    renderStops();
+    renderResults();
+  </script>
+</body>
+</html>
